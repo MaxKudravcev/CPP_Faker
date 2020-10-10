@@ -39,16 +39,21 @@ namespace FakerLib
             if (generator != null)
                 return generator.Generate(new GeneratorContext(t));
 
-            (object, ParameterInfo[]) objAndParams = CreateObjectOrStruct(t);
-            
-            /*
-            MemberInfo[] members = t.GetMembers();
-            foreach (MemberInfo mi in members)
+            (object, ParameterInfo[]) objAndParams = CreateObject(t);
+
+
+            MemberInfo[] fieldsAndProps = t.GetFields();
+            fieldsAndProps.Concat(t.GetProperties());
+            foreach (MemberInfo mi in fieldsAndProps)
             {
-                if (ctorParamInfos.Single(pi => pi. == mi.Name) == null && )
-                    
+                if (objAndParams.Item2.Single(pi => pi.Name == mi.Name) == null)
+                {                    
+                    (mi as FieldInfo)?.SetValue(objAndParams.Item1, Create(((FieldInfo)mi).FieldType));
+                    if((mi as PropertyInfo)?.CanWrite == true)
+                        ((PropertyInfo)mi).SetValue(objAndParams.Item1, Create(((PropertyInfo)mi).PropertyType));
+                }   
             }
-            */
+            
         }
 
         private bool IsRequiredType(Type type, Type required)
@@ -68,13 +73,24 @@ namespace FakerLib
             return generators.Single(g => g.CanGenerate(t));
         }
 
-        private (object, ParameterInfo[]) CreateObjectOrStruct(Type t)
+        private (object, ParameterInfo[]) CreateObject(Type t)
         {
             ConstructorInfo[] ctors = t.GetConstructors();
             if (ctors.Length == 0 && t.IsClass)
                 return (null, null);
             else if (ctors.Length == 0)
-                return (Activator.CreateInstance(t), new ParameterInfo[0]);
+            {
+                try
+                {
+                    return (Activator.CreateInstance(t), new ParameterInfo[0]);
+                }
+                                    
+                catch
+                {
+                    return (null, null);
+                }       
+            }
+                
             ctors.OrderByDescending(ci => ci.GetParameters().Length);
 
             object obj = null;
