@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.1062
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Faker", "Faker\Faker.csproj", "{3536B9C7-0096-45AC-A4E8-B6ADA70862BB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PluginsSupport", "PluginsSupport\PluginsSupport.csproj", "{B7F76582-06FF-468B-8150-E3204BEE6570}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{DC87D7AC-4553-4271-ADB6-9355CD0A104B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CharGenerator", "CharGenerator\CharGenerator.csproj", "{5F06206D-C518-431D-AEA4-44BD9B05E3DB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BoolGenerator", "BoolGenerator\BoolGenerator.csproj", "{5292C812-5838-492A-ACB2-F6AED6E52A46}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FakerApp", "FakerApp\FakerApp.csproj", "{310C35C8-6AB3-44B6-90FD-827E94C982FB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3536B9C7-0096-45AC-A4E8-B6ADA70862BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3536B9C7-0096-45AC-A4E8-B6ADA70862BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3536B9C7-0096-45AC-A4E8-B6ADA70862BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3536B9C7-0096-45AC-A4E8-B6ADA70862BB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B7F76582-06FF-468B-8150-E3204BEE6570}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B7F76582-06FF-468B-8150-E3204BEE6570}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B7F76582-06FF-468B-8150-E3204BEE6570}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B7F76582-06FF-468B-8150-E3204BEE6570}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5F06206D-C518-431D-AEA4-44BD9B05E3DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5F06206D-C518-431D-AEA4-44BD9B05E3DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5F06206D-C518-431D-AEA4-44BD9B05E3DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5F06206D-C518-431D-AEA4-44BD9B05E3DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5292C812-5838-492A-ACB2-F6AED6E52A46}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5292C812-5838-492A-ACB2-F6AED6E52A46}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5292C812-5838-492A-ACB2-F6AED6E52A46}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5292C812-5838-492A-ACB2-F6AED6E52A46}.Release|Any CPU.Build.0 = Release|Any CPU
+		{310C35C8-6AB3-44B6-90FD-827E94C982FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{310C35C8-6AB3-44B6-90FD-827E94C982FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{310C35C8-6AB3-44B6-90FD-827E94C982FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{310C35C8-6AB3-44B6-90FD-827E94C982FB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{5F06206D-C518-431D-AEA4-44BD9B05E3DB} = {DC87D7AC-4553-4271-ADB6-9355CD0A104B}
+		{5292C812-5838-492A-ACB2-F6AED6E52A46} = {DC87D7AC-4553-4271-ADB6-9355CD0A104B}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {BE7C76C9-4DCD-4135-9B18-2E2416A87D66}
+	EndGlobalSection
+EndGlobal
