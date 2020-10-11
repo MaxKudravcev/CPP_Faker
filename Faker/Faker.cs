@@ -38,25 +38,15 @@ namespace FakerLib
             IGenerator generator = FindGenerator(t);
             if (generator != null)
                 return generator.Generate(new GeneratorContext(t));
-
-            (object, ParameterInfo[]) objAndParams = CreateObject(t);
-
-
-            MemberInfo[] fieldsAndProps = t.GetFields();
-            fieldsAndProps.Concat(t.GetProperties());
-            foreach (MemberInfo mi in fieldsAndProps)
-            {
-                if (objAndParams.Item2.Single(pi => pi.Name == mi.Name) == null)
-                {                    
-                    (mi as FieldInfo)?.SetValue(objAndParams.Item1, Create(((FieldInfo)mi).FieldType));
-                    if((mi as PropertyInfo)?.CanWrite == true)
-                        ((PropertyInfo)mi).SetValue(objAndParams.Item1, Create(((PropertyInfo)mi).PropertyType));
-                }   
-            }
             
+            (object, ParameterInfo[]) objAndParams = CreateObject(t);
+            if (objAndParams.Item1 == null)
+                return GetDefaultValue(t);
+
+            return SetFieldsAndProps(t, objAndParams.Item1, objAndParams.Item2);
         }
 
-        private bool IsRequiredType(Type type, Type required)
+        private static bool IsRequiredType(Type type, Type required)
         {
             while (type != null && type != typeof(object))
             {
@@ -73,23 +63,28 @@ namespace FakerLib
             return generators.Single(g => g.CanGenerate(t));
         }
 
+        private static object GetDefaultValue(Type t)
+        {
+            if (t.IsValueType)
+                return Activator.CreateInstance(t);
+            else
+                return null;
+        }
+
+        private static bool IsDefaultValue(object obj, MemberInfo mi)
+        {
+            if ((mi as FieldInfo)?.GetValue(obj) == GetDefaultValue((mi as FieldInfo).FieldType))
+                return true;
+            else if ((mi as PropertyInfo)?.GetValue(obj) == GetDefaultValue((mi as PropertyInfo).PropertyType))
+                return true;
+            return false;
+        }
+
         private (object, ParameterInfo[]) CreateObject(Type t)
         {
             ConstructorInfo[] ctors = t.GetConstructors();
             if (ctors.Length == 0 && t.IsClass)
                 return (null, null);
-            else if (ctors.Length == 0)
-            {
-                try
-                {
-                    return (Activator.CreateInstance(t), new ParameterInfo[0]);
-                }
-                                    
-                catch
-                {
-                    return (null, null);
-                }       
-            }
                 
             ctors.OrderByDescending(ci => ci.GetParameters().Length);
 
@@ -114,9 +109,39 @@ namespace FakerLib
                     continue;
                 }
             }
-            if (obj == null)
+
+            if (obj == null && t.IsValueType)
+            {
+                try
+                {
+                    return (Activator.CreateInstance(t), new ParameterInfo[0]);
+                }
+
+                catch
+                {
+                    return (null, null);
+                }
+            }
+            else if (obj == null)
                 return (null, null);
+
             return (obj, ctorParamInfos);
+        }
+
+        private object SetFieldsAndProps(Type t, object obj, ParameterInfo[]  pInfos)
+        {
+            MemberInfo[] fieldsAndProps = t.GetFields();
+            fieldsAndProps.Concat(t.GetProperties());
+            foreach (MemberInfo mi in fieldsAndProps)
+            {
+                if (pInfos.Single(pi => pi.Name == mi.Name) == null && IsDefaultValue(obj, mi))
+                {
+                    (mi as FieldInfo)?.SetValue(obj, Create(((FieldInfo)mi).FieldType));
+                    if ((mi as PropertyInfo)?.CanWrite == true)
+                        ((PropertyInfo)mi).SetValue(obj, Create(((PropertyInfo)mi).PropertyType));
+                }
+            }
+            return obj;
         }
     }
 }
