@@ -9,7 +9,9 @@ namespace FakerLib
 {
     public class Faker
     {
+        private readonly int MaxCycle = 10;
         private List<IGenerator> generators = new List<IGenerator>();
+        private Stack<Type> nestingStack = new Stack<Type>();
 
         public Faker()
         {
@@ -35,14 +37,25 @@ namespace FakerLib
 
         private object Create(Type t)
         {
+            if (nestingStack.Where(type => type == t).Count() >= MaxCycle)
+                return GetDefaultValue(t);
+            nestingStack.Push(t);
+
             IGenerator generator = FindGenerator(t);
             if (generator != null)
+            {
+                nestingStack.Pop();
                 return generator.Generate(new GeneratorContext(t));
-            
+            }
+
             (object, ParameterInfo[]) objAndParams = CreateObject(t);
             if (objAndParams.Item1 == null)
+            {
+                nestingStack.Pop();
                 return GetDefaultValue(t);
+            }
 
+            nestingStack.Pop();
             return SetFieldsAndProps(t, objAndParams.Item1, objAndParams.Item2);
         }
 
