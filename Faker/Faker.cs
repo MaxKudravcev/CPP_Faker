@@ -12,9 +12,11 @@ namespace FakerLib
         private readonly int MaxCycle = 10;
         private List<IGenerator> generators = new List<IGenerator>();
         private Stack<Type> nestingStack = new Stack<Type>();
+        private FakerConfig config = null;
 
-        public Faker()
+        public Faker(FakerConfig config = null)
         {
+            this.config = config;
             List<TypeInfo> generatorTypes = Assembly.GetExecutingAssembly().DefinedTypes.Where(ti => IsRequiredType(ti, typeof(Generator<>))).ToList();
             generatorTypes.ForEach(ti => generators.Add((IGenerator)Activator.CreateInstance(ti.AsType())));
 
@@ -109,7 +111,12 @@ namespace FakerLib
                 ParameterInfo[] parametersInfo = ctor.GetParameters();
                 object[] parameters = new object[parametersInfo.Length];
                 for (int i = 0; i < parameters.Length; i++)
+                {
+                    FakerConfig.Rule rule = config?.Rules.Find(Rule => (Rule.MemberType == parametersInfo[i].ParameterType && Rule.MemberName == parametersInfo[i].Name));
+                    if (rule != null)
+                        parameters[i] = (Activator.CreateInstance(rule.GeneratorType) as IGenerator).Generate(new GeneratorContext(rule.MemberType));
                     parameters[i] = Create(parametersInfo[i].ParameterType);
+                }
 
                 try
                 {
@@ -149,6 +156,15 @@ namespace FakerLib
             {
                 if (pInfos.Single(pi => pi.Name == mi.Name) == null && IsDefaultValue(obj, mi))
                 {
+                    FakerConfig.Rule rule = config?.Rules.Find(Rule => (Rule.MemberName == mi.Name));
+                    if(rule != null)
+                    {
+                        if (mi is FieldInfo fi && fi.FieldType == rule.MemberType)
+                            fi.SetValue(obj, (Activator.CreateInstance(rule.GeneratorType) as IGenerator).Generate(new GeneratorContext(rule.MemberType)));
+                        else if ((mi as PropertyInfo).PropertyType == rule.MemberType && (mi as PropertyInfo).CanWrite)
+                            (mi as PropertyInfo).SetValue(obj, (Activator.CreateInstance(rule.GeneratorType) as IGenerator).Generate(new GeneratorContext(rule.MemberType)));
+                    }
+
                     (mi as FieldInfo)?.SetValue(obj, Create(((FieldInfo)mi).FieldType));
                     if ((mi as PropertyInfo)?.CanWrite == true)
                         ((PropertyInfo)mi).SetValue(obj, Create(((PropertyInfo)mi).PropertyType));

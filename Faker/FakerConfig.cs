@@ -24,11 +24,11 @@ namespace FakerLib
 
         }
 
-        private List<Rule> rules = new List<Rule>();
+        internal List<Rule> Rules { get; } = new List<Rule>();
 
         public void Add<T1, T2, T3>(Expression<Func<T1, T2>> exp) where T3 : Generator<T2>
         {
-            rules.Add(new Rule(typeof(T1), typeof(T2), typeof(T3), ((MemberExpression)exp.Body).Member.Name));
+            Rules.Add(new Rule(typeof(T1), typeof(T2), typeof(T3), ((MemberExpression)exp.Body).Member.Name));
         }
     }
 }
