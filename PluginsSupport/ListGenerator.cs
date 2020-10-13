@@ -11,7 +11,7 @@ namespace FakerLib.PluginsSupport
             {
                 List<T> list = new List<T>();
                 for (int i = 0; i < new Random().Next(10); i++)
-                    list.Add((T)generator.Generate());
+                    list.Add((T)generator.Generate(new GeneratorContext(typeof(T))));
                 return list;
             }
             else throw new Exception("Invalid generator sent as a parameter");

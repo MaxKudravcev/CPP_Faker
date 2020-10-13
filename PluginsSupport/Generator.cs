@@ -9,7 +9,7 @@ namespace FakerLib.PluginsSupport
 
         object IGenerator.Generate(GeneratorContext context)
         {
-            if (context.TargetType is List<T>)
+            if (context.TargetType == typeof(List<T>))
                 return ListGenerator.GenerateList<T>(this);
             else return Generate();
         }
@@ -18,7 +18,7 @@ namespace FakerLib.PluginsSupport
         {
             if (type == typeof(T))
                 return true;
-            if (type is List<T>)
+            if (type == typeof(List<T>))
                 return true;
             return false;
         }

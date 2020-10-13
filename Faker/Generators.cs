@@ -44,7 +44,12 @@ namespace FakerLib
         public override DateTime Generate()
         {
             Random r = new Random();
-            return new DateTime(r.Next() << 32 | r.Next());
+            DateTime start = new DateTime(1990, 1, 1);
+            TimeSpan range = (DateTime.Now - start);
+            return start.AddDays(r.Next(range.Days));
+            
+            //return start.AddTicks(r.Next());
+            
         }
     }
 }

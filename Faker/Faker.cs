@@ -75,7 +75,7 @@ namespace FakerLib
 
         private IGenerator FindGenerator(Type t)
         {
-            return generators.Single(g => g.CanGenerate(t));
+            return generators.Find(g => g.CanGenerate(t));
         }
 
         private static object GetDefaultValue(Type t)
@@ -88,10 +88,17 @@ namespace FakerLib
 
         private static bool IsDefaultValue(object obj, MemberInfo mi)
         {
-            if ((mi as FieldInfo)?.GetValue(obj) == GetDefaultValue((mi as FieldInfo).FieldType))
-                return true;
-            else if ((mi as PropertyInfo)?.GetValue(obj) == GetDefaultValue((mi as PropertyInfo).PropertyType))
-                return true;
+            if (mi is FieldInfo fi)
+            {
+                //object a = fi.GetValue(obj), b = GetDefaultValue(fi.FieldType);
+                return fi.GetValue(obj).Equals(GetDefaultValue(fi.FieldType));
+                //return a.Equals(b);
+
+                //if(fi.FieldType.IsValueType)
+            }
+                
+            if (mi is PropertyInfo pi)
+                return pi.GetValue(obj).Equals(GetDefaultValue(pi.PropertyType));
             return false;
         }
 
@@ -115,7 +122,8 @@ namespace FakerLib
                     FakerConfig.Rule rule = config?.Rules.Find(Rule => (Rule.MemberType == parametersInfo[i].ParameterType && Rule.MemberName == parametersInfo[i].Name));
                     if (rule != null)
                         parameters[i] = (Activator.CreateInstance(rule.GeneratorType) as IGenerator).Generate(new GeneratorContext(rule.MemberType));
-                    parameters[i] = Create(parametersInfo[i].ParameterType);
+                    else
+                        parameters[i] = Create(parametersInfo[i].ParameterType);
                 }
 
                 try
@@ -124,7 +132,7 @@ namespace FakerLib
                     ctorParamInfos = parametersInfo;
                     break;
                 }
-                catch (Exception ex)
+                catch
                 {
                     continue;
                 }
@@ -150,11 +158,12 @@ namespace FakerLib
 
         private object SetFieldsAndProps(Type t, object obj, ParameterInfo[]  pInfos)
         {
+
             MemberInfo[] fieldsAndProps = t.GetFields();
-            fieldsAndProps.Concat(t.GetProperties());
+            fieldsAndProps = fieldsAndProps.Concat(t.GetProperties(BindingFlags.Instance | BindingFlags.Public)).ToArray();
             foreach (MemberInfo mi in fieldsAndProps)
             {
-                if (pInfos.Single(pi => pi.Name == mi.Name) == null && IsDefaultValue(obj, mi))
+                if (pInfos.ToList().Find(pi => pi.Name == mi.Name) == null && IsDefaultValue(obj, mi))
                 {
                     FakerConfig.Rule rule = config?.Rules.Find(Rule => (Rule.MemberName == mi.Name));
                     if(rule != null)
