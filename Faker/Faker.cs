@@ -78,13 +78,7 @@ namespace FakerLib
             return generators.Find(g => g.CanGenerate(t));
         }
 
-        private static object GetDefaultValue(Type t)
-        {
-            if (t.IsValueType)
-                return Activator.CreateInstance(t);
-            else
-                return null;
-        }
+        private static object GetDefaultValue(Type t) => t.IsValueType ? Activator.CreateInstance(t) : null;
 
         private static bool IsDefaultValue(object obj, MemberInfo mi)
         {

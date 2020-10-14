@@ -10,7 +10,7 @@ namespace FakerLib.PluginsSupport
             if (generator.CanGenerate(typeof(T)))
             {
                 List<T> list = new List<T>();
-                for (int i = 0; i < new Random().Next(10); i++)
+                for (int i = 0; i < new Random().Next(10) + 1; i++)
                     list.Add((T)generator.Generate(new GeneratorContext(typeof(T))));
                 return list;
             }

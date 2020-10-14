@@ -13,7 +13,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CharGenerator", "CharGenera
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BoolGenerator", "BoolGenerator\BoolGenerator.csproj", "{5292C812-5838-492A-ACB2-F6AED6E52A46}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FakerApp", "FakerApp\FakerApp.csproj", "{310C35C8-6AB3-44B6-90FD-827E94C982FB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FakerApp", "FakerApp\FakerApp.csproj", "{310C35C8-6AB3-44B6-90FD-827E94C982FB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Faker.Tests", "Faker.Tests\Faker.Tests.csproj", "{73BE8BAD-1821-4E72-B707-ED5D26379FFF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,6 +43,10 @@ Global
 		{310C35C8-6AB3-44B6-90FD-827E94C982FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{310C35C8-6AB3-44B6-90FD-827E94C982FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{310C35C8-6AB3-44B6-90FD-827E94C982FB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{73BE8BAD-1821-4E72-B707-ED5D26379FFF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{73BE8BAD-1821-4E72-B707-ED5D26379FFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{73BE8BAD-1821-4E72-B707-ED5D26379FFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{73BE8BAD-1821-4E72-B707-ED5D26379FFF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
