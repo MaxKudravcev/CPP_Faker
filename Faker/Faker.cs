@@ -9,14 +9,15 @@ namespace FakerLib
 {
     public class Faker
     {
-        private readonly int MaxCycle = 10;
+        private readonly int MaxCycle;
         private List<IGenerator> generators = new List<IGenerator>();
         private Stack<Type> nestingStack = new Stack<Type>();
         private FakerConfig config = null;
 
-        public Faker(FakerConfig config = null)
+        public Faker(FakerConfig config = null, int maxCycle = 5)
         {
             this.config = config;
+            MaxCycle = maxCycle;
             List<TypeInfo> generatorTypes = Assembly.GetExecutingAssembly().DefinedTypes.Where(ti => IsRequiredType(ti, typeof(Generator<>))).ToList();
             generatorTypes.ForEach(ti => generators.Add((IGenerator)Activator.CreateInstance(ti.AsType())));
 
