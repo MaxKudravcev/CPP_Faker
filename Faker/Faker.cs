@@ -58,8 +58,10 @@ namespace FakerLib
                 return GetDefaultValue(t);
             }
 
+            
+            object obj = SetFieldsAndProps(t, objAndParams.Item1, objAndParams.Item2);
             nestingStack.Pop();
-            return SetFieldsAndProps(t, objAndParams.Item1, objAndParams.Item2);
+            return obj;
         }
 
         private static bool IsRequiredType(Type type, Type required)
@@ -86,14 +88,16 @@ namespace FakerLib
             if (mi is FieldInfo fi)
             {
                 //object a = fi.GetValue(obj), b = GetDefaultValue(fi.FieldType);
-                return fi.GetValue(obj).Equals(GetDefaultValue(fi.FieldType));
+                //return fi.GetValue(obj).Equals(GetDefaultValue(fi.FieldType));
+                return object.Equals(fi.GetValue(obj), GetDefaultValue(fi.FieldType));
                 //return a.Equals(b);
 
                 //if(fi.FieldType.IsValueType)
             }
                 
             if (mi is PropertyInfo pi)
-                return pi.GetValue(obj).Equals(GetDefaultValue(pi.PropertyType));
+                //return pi.GetValue(obj).Equals(GetDefaultValue(pi.PropertyType));
+                return object.Equals(pi.GetValue(obj), GetDefaultValue(pi.PropertyType));
             return false;
         }
 
@@ -168,10 +172,12 @@ namespace FakerLib
                         else if ((mi as PropertyInfo).PropertyType == rule.MemberType && (mi as PropertyInfo).CanWrite)
                             (mi as PropertyInfo).SetValue(obj, (Activator.CreateInstance(rule.GeneratorType) as IGenerator).Generate(new GeneratorContext(rule.MemberType)));
                     }
-
-                    (mi as FieldInfo)?.SetValue(obj, Create(((FieldInfo)mi).FieldType));
-                    if ((mi as PropertyInfo)?.CanWrite == true)
-                        ((PropertyInfo)mi).SetValue(obj, Create(((PropertyInfo)mi).PropertyType));
+                    else
+                    {
+                        (mi as FieldInfo)?.SetValue(obj, Create(((FieldInfo)mi).FieldType));
+                        if ((mi as PropertyInfo)?.CanWrite == true && (mi as PropertyInfo)?.SetMethod.IsPublic == true)
+                            ((PropertyInfo)mi).SetValue(obj, Create(((PropertyInfo)mi).PropertyType));
+                    }                  
                 }
             }
             return obj;

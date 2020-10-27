@@ -74,7 +74,7 @@ namespace FakerLib.Tests
         {
             FakerConfig fc = new FakerConfig();
             fc.Add<Bar, string, StandStringGenerator>(Bar => Bar.stand);
-            Faker faker = new Faker(fc, 3);
+            faker = new Faker(fc, 2);
         }
                 
         [TestMethod]
@@ -121,13 +121,13 @@ namespace FakerLib.Tests
             Assert.AreNotEqual(GetDefaultValue(typeof(double)), s.b);
         }
 
-        [TestMethod]
-        public void PluginsTest()
-        {
-            PluginsTestStruct s = faker.Create<PluginsTestStruct>();
+        //[TestMethod]
+        //public void PluginsTest()
+        //{
+        //    PluginsTestStruct s = faker.Create<PluginsTestStruct>();
 
-            Assert.AreNotEqual(GetDefaultValue(typeof(char)), s.c);
-        }
+        //    Assert.AreNotEqual(GetDefaultValue(typeof(char)), s.c);
+        //}
 
         [TestMethod]
         public void NestingTest()
